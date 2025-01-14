@@ -13,12 +13,16 @@ Node
     struct Node *parent;
     struct Node *next;
     struct Node *prev;
-    
-    SDL_Rect rect;
+
+    uint num_children;
+    uint depth;
+    Rect rect;
+    bool damaged;
     
     void (*update)(Node *, AppState *);
     void (*draw)(  Node *, AppState *);
     void (*event)( Node *, AppState *);
+    void (*free)(  Node *);
 } Node;
 
 
