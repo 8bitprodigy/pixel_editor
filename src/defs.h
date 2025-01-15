@@ -14,6 +14,7 @@
 #define false 0
 #define true  !false
 
+
 #define Rect SDL_Rect
 #define RECT( _x_, _y_, _w_, _h_ ) ((Rect){.x=(_x_),.y=(_y_),.w=(_w_),.h=(_h_))
 

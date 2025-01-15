@@ -8,13 +8,13 @@
     C O N S T R U C T O R    
 ****************************/
 void
-AppState_init(AppState *app_state)
+AppState_init(AppState *self)
 {
-    app_state->done        = false;
-    app_state->app_width   = DEFAULT_SCREEN_WIDTH;
-    app_state->app_height  = DEFAULT_SCREEN_HEIGHT;
-    app_state->render_mode = SDL_RENDERER_SOFTWARE;
-    app_state->damaged     = true;
+    self->done        = false;
+    self->app_width   = DEFAULT_SCREEN_WIDTH;
+    self->app_height  = DEFAULT_SCREEN_HEIGHT;
+    self->render_mode = SDL_RENDERER_SOFTWARE;
+    self->damaged     = true;
 }
 
 AppState *
@@ -36,11 +36,11 @@ AppState_new(void)
     D E S T R U C T O R
 **************************/
 void
-AppState_free(AppState *app_state)
+AppState_free(AppState *self)
 {
-    SDL_DestroyWindow(app_state->window);
+    SDL_DestroyWindow(self->window);
     SDL_Quit();
-    free(app_state);
+    free(self);
 }
 
 
@@ -48,38 +48,23 @@ AppState_free(AppState *app_state)
     M E T H O D S    
 ********************/
 void
-AppState_update(AppState *app_state)
+AppState_update(AppState *self)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
-            app_state->done = true;
+            self->done = true;
         }
     }
 }
 
 void
-AppState_draw(AppState *app_state)
+AppState_draw(AppState *self)
 {
-    if (!app_state->damaged) return;
+    if (!self->damaged) return;
 
-    SDL_Renderer *context = app_state->context;
-/*
-    if (SDL_MUSTLOCK(app_state->context)) {
-        if (SDL_LockSurface(app_state->context) < 0) {
-            SDL_ERR("Failed to lock surface");
-            app_state->done = true;
-        }
-    }
-    
-    SDL_FillRect(app_state->context, NULL, SDL_MapRGB(app_state->context->format, 87, 87, 87));
+    SDL_Renderer *context = self->context;
 
-    if (SDL_MUSTLOCK(app_state->context)) {
-        SDL_UnlockSurface(app_state->context);
-    }
-
-    SDL_UpdateWindowSurface(app_state->window);
-*/
     /* Clear the context with Grey */
     SDL_SetRenderDrawColor(context, 87, 87, 87, 255);
     SDL_RenderClear(context);
@@ -89,57 +74,48 @@ AppState_draw(AppState *app_state)
 
     /* Blit the updated context to the screen */
     SDL_RenderPresent(context);
-    app_state->damaged = false;
+    self->damaged = false;
 }
 
 void
-AppState_run(AppState *app_state)
+AppState_run(AppState *self)
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_ERR("Failed to initialize SDL");
         return;
     }
 
-    app_state->window = SDL_CreateWindow(
+    self->window = SDL_CreateWindow(
         APP_NAME,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        app_state->app_width,
-        app_state->app_height,
+        self->app_width,
+        self->app_height,
         SDL_WINDOW_SHOWN
     );
-    if (!app_state->window) {
+    if (!self->window) {
         SDL_ERR("Failed to create window");
         SDL_Quit();
-        app_state->done = true;
+        self->done = true;
         return;
     }
-/*
-    app_state->context = SDL_GetWindowSurface(app_state->window);
-    if (!app_state->context) {
-        SDL_ERR("Failed to get window surface");
-        SDL_DestroyWindow(app_state->window);
-        SDL_Quit();
-        app_state->done = true;
-        return;
-    }
-*/
-    app_state->context = SDL_CreateRenderer(
-        app_state->window, 
+
+    self->context = SDL_CreateRenderer(
+        self->window, 
         -1, 
-        app_state->render_mode | 
+        self->render_mode | 
         SDL_RENDERER_PRESENTVSYNC
     );
-    if (!app_state->context) {
+    if (!self->context) {
         SDL_ERR("Failed to create SDL_Renderer");
-        SDL_DestroyWindow(app_state->window);
+        SDL_DestroyWindow(self->window);
         SDL_Quit();
         return;
     }
     
-    app_state->damaged = true;
-    while (!app_state->done){
-        AppState_update(app_state);
-        AppState_draw(app_state);
+    self->damaged = true;
+    while (!self->done){
+        AppState_update(self);
+        AppState_draw(self);
     }
 }

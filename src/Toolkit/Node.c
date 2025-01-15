@@ -1,29 +1,27 @@
-
-
 #include "Node_private.h"
 
 
 /****************************
     C O N S T R U C T O R
 *****************************/
-void  Node_init( Node *node )
+void  Node_init( Node *self )
 {
-    node->child   = NULL;
-    node->parent  = NULL;
-    node->prev    = node;
-    node->next    = node;
+    self->child   = NULL;
+    self->parent  = NULL;
+    self->prev    = self;
+    self->next    = self;
 
-    node->depth   = 0;
-    node->rect    = (SDL_Rect){
+    self->depth   = 0;
+    self->rect    = (SDL_Rect){
         .x = 0, .y = 0,
         .w = 0, .h = 0,
     };
-    node->damaged = true;
+    self->damaged = true;
 
-    node->update = &Node_update;
-    node->draw   = &Node_draw;
-    node->event  = &Node_event;
-    node->free   = &Node_free;
+    self->update = NULL;
+    self->draw   = NULL;
+    self->event  = NULL;
+    self->free   = NULL;
 } /* Node_init */
 
 Node *Node_new(void)
@@ -44,11 +42,12 @@ Node *Node_new(void)
     D E S T R U C T O R
 **************************/
 void
-Node_free( Node *node )
+Node_free( Node *self )
 {
-    if(node->child) node->child->free(node->child);
-    if(node->next)  node->next->free(node->next);
-    free(node);
+    if(self->child) Node_free(self->child);
+    if(self->next)  Node_free(self->next);
+    if (self->free) self->free(self); 
+    else free(self);
 } /* Node_free */
 
 
@@ -56,32 +55,33 @@ Node_free( Node *node )
     M E T H O D S
 ********************/
 void
-add_sibling(Node *node, Node *sibling)
+add_sibling(Node *self, Node *sibling)
 {
-    Node *last = node->prev;
+    Node *last = self->prev;
     
-    sibling->next = node;
+    sibling->next = self;
     sibling->prev = last;
 
-    node->prev = sibling;
+    self->prev = sibling;
     last->next = sibling;
 }
 
 void
-Node_add_child(Node *node, Node *new_node)
+Node_add_child(Node *self, Node *new_node)
 {
-    if (!node) return;
+    if (!self) return;
     if (!new_node) return;
     
-    node->num_children++;
-    new_node->parent = node;
+    self->num_children++;
+    new_node->parent = self;
+    new_node->depth  = self->depth + 1;
     
-    if (!node->child) {
-        node->child      = new_node;
+    if (!self->child) {
+        self->child      = new_node;
         return;
     }
     
-    add_sibling(node->child, new_node);
+    add_sibling(self->child, new_node);
 }
 
 
@@ -89,22 +89,26 @@ Node_add_child(Node *node, Node *new_node)
     C A L L B A C K S
 ************************/
 void
-Node_update(Node *node, AppState *app_state)
+Node_update(Node *self, AppState *app_state)
 { 
-    if(node->child) node->child->update(node->child, app_state);
-    if(node->next)  node->next->update(node->next, app_state);
+    if(self->child)  Node_update(self->child, app_state);
+    if(self->next)   Node_update(self->next, app_state);
+    if(self->update) self->update(self, app_state);
 }
 
 void
-Node_draw(Node *node, AppState *app_state)
+Node_draw(Node *self, AppState *app_state)
 {
-    if(node->child) node->child->draw(node->child, app_state);
-    if(node->next)  node->next->draw(node->next, app_state);
+    if(self->child) Node_draw(self->child, app_state);
+    if(self->next)  Node_draw(self->next, app_state);
+    if(self->draw)  self->draw(self, app_state);
 }
 
 void
-Node_event(Node *node, AppState *app_state)
+Node_event(Node *self, AppState *app_state)
 {
-    if(node->child) node->child->event(node->child, app_state);
-    if(node->next)  node->next->event(node->next, app_state);
+    if(self->child) Node_event(self->child, app_state);
+    if(self->next)  Node_event(self->next, app_state);
+    if(self->event) self->event(self, app_state);
 }
+

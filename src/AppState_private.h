@@ -1,6 +1,7 @@
 #ifndef APPSTATE_PRIVATE_H
 #define APPSTATE_PRIVATE_H
 
+
 #include <SDL2/SDL.h>
 
 #include "AppState.h"
@@ -16,5 +17,6 @@ AppState
     SDL_Renderer *context;
     bool          damaged;
 } AppState;
+
 
 #endif /* APPSTATE_PRIVATE_H */

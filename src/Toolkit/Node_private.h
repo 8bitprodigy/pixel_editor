@@ -1,6 +1,7 @@
 #ifndef NODE_PRIVATE_H
 #define NODE_PRIVATE_H
 
+
 #include <SDL2/SDL.h>
 
 #include "Node.h"

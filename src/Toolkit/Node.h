@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+
 #include "../AppState.h"
 #include "../defs.h"
 

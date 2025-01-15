@@ -1,6 +1,7 @@
 #ifndef APPSTATE_H
 #define APPSTATE_H
 
+
 #include "defs.h"
 
 typedef struct AppState AppState;
@@ -16,5 +17,6 @@ void AppState_free(  AppState *app_state);
 void AppState_update(AppState *app_state);
 void AppState_draw(  AppState *app_state);
 void AppState_run(   AppState *app_state);
+
 
 #endif /* APPSTATE_H */
