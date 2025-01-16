@@ -1,7 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "AppState_private.h"
+
+#include <SDL2/SDL.h>
+
+#include "AppState.h"
+#include "Toolkit/Toolkit.h"
+
+
+typedef struct
+AppState
+{
+    bool          done;
+    uint          app_width;
+    uint          app_height;
+    SDL_Window   *window;
+    int32         render_mode;
+    SDL_Renderer *context;
+    bool          damaged;
+    Node         *UI;
+} AppState;
 
 
 /****************************
