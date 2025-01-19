@@ -1,6 +1,7 @@
 #ifndef IMAGEDOC_H
 #define IMAGEDOC_H
 
+#include "types.h"
 #include "defs.h"
 
 typedef struct ImageDoc ImageDoc;
@@ -11,17 +12,21 @@ enum {
 };
 
 /* Constructors */
-void ImageDoc_init(ImageDoc *img_doc);
+void      ImageDoc_init(ImageDoc *img_doc);
 ImageDoc *ImageDoc_new(void);
 
 /* Destructor */
-void ImageDoc_free(ImageDoc *img_doc);
+ImageDoc *ImageDoc_free(ImageDoc *img_doc);
 
 /* Methods */
+/*    Add */
+void      ImageDoc_add(ImageDoc *img_doc, ImageDoc *new_img_doc);
+/*    Remove */
+void      ImageDoc_remove(ImageDoc *img_doc);
 /*    Getters */
-void *ImageDoc_get_image(ImageDoc *img_doc);
+Image    *ImageDoc_get_image(ImageDoc *img_doc);
 
-void  ImageDoc_load(const char *path);
+void      ImageDoc_load(const char *path);
 
 
 #endif /* IMAGEDOC_H */

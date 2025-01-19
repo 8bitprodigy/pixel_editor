@@ -1,7 +1,7 @@
 #include "AppState.h"
 #include "defs.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     AppState *app_state = AppState_new();
     if (app_state) {

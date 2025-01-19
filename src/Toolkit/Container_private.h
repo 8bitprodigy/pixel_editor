@@ -10,6 +10,8 @@ typedef struct
 Container
 {
     Node base;
+    ContainerOrientation orientation;
+    ContainerChildOrder  order;
 } Container;
 
 

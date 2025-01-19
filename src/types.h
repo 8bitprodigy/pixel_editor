@@ -4,14 +4,15 @@
 
 #include <SDL2/SDL.h>
 
-typedef struct
-Coord
-{
-    int x;
-    int y;
-} Coord;
+#include "defs.h"
 
-typedef unsigned char uint8;
+
+typedef struct
+Vec2Int
+{
+    int16 x;
+    int16 y;
+} Vec2Int;
 
 typedef SDL_Color   Color;
 typedef SDL_Surface Image;

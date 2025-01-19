@@ -2,14 +2,17 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <stdint.h>
 /* CONSTANTS */
 #define DEFAULT_SCREEN_WIDTH  800
 #define DEFAULT_SCREEN_HEIGHT 480
 #define APP_NAME "Pixel Editor" /* To be changed */
 
 /* TYPES */
-#define uint  unsigned int
-#define int32 long int
+#define uint8  unsigned char 
+#define int16  int_least16_t
+#define uint16 uint_least16_t
+#define int32  uint_least32_t
 #define bool  unsigned char
 #define false 0
 #define true  !false

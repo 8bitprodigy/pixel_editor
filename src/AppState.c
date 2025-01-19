@@ -8,12 +8,15 @@
 #include "Toolkit/Toolkit.h"
 
 
+/****************************************
+    S T R U C T   D E F I N I T I O N
+****************************************/
 typedef struct
 AppState
 {
     bool          done;
-    uint          app_width;
-    uint          app_height;
+    uint16        app_width;
+    uint16        app_height;
     SDL_Window   *window;
     int32         render_mode;
     SDL_Renderer *context;
@@ -73,7 +76,9 @@ AppState_update(AppState *self)
         if (event.type == SDL_QUIT) {
             self->done = true;
         }
+        Node_event(self->UI, event, self);
     }
+    Node_update(self->UI, self);
 }
 
 void
@@ -86,10 +91,11 @@ AppState_draw(AppState *self)
     /* Clear the context with Grey */
     SDL_SetRenderDrawColor(context, 87, 87, 87, 255);
     SDL_RenderClear(context);
-    
+    /* Red Rectangle */
     SDL_SetRenderDrawColor(context, 255, 0, 0, 255);
     SDL_RenderFillRect(context, &(SDL_Rect){200, 120, 400, 240});
 
+    Node_draw(self->UI, context, self);
     /* Blit the updated context to the screen */
     SDL_RenderPresent(context);
     self->damaged = false;

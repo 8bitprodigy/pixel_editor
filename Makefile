@@ -8,8 +8,8 @@ SRCDIR = src
 OBJDIR = obj
 
 TARGET   = $(PROJECTNAME)
-CSOURCES = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c)))
-OBJS     = $(CSOURCES:%.c=$(OBJDIR)/%.o)
+CSOURCES = $(shell find $(SRCDIR) -type f -name '*.c')
+OBJS     = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(CSOURCES))
 
 all: rm-elf prepare $(TARGET)
 
@@ -20,6 +20,7 @@ rm-elf:
 	-rm -f $(TARGET)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@) # Ensure subdirectories in obj/ exist
 	$(CC) $(CFLAGS) $(CCFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJS)
